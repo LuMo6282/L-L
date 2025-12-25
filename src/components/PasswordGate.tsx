@@ -41,47 +41,40 @@ export default function PasswordGate({ children }: { children: React.ReactNode }
   return (
     <div style={{
       minHeight: '100vh',
-      backgroundColor: 'white',
+      backgroundColor: '#f0f0f0',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      fontFamily: 'system-ui, -apple-system, sans-serif'
+      fontFamily: 'Times New Roman, serif'
     }}>
-      <form onSubmit={handleSubmit} style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: '16px'
-      }}>
+      <form onSubmit={handleSubmit}>
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="password"
           autoFocus
           style={{
-            padding: '12px 16px',
-            fontSize: '16px',
-            border: '1px solid #ccc',
-            borderRadius: '4px',
-            outline: 'none',
-            width: '200px',
-            textAlign: 'center'
+            padding: '4px',
+            fontSize: '13px',
+            border: '2px inset #999',
+            backgroundColor: 'white',
+            width: '140px',
+            marginRight: '4px'
           }}
         />
         <button
           type="submit"
           style={{
-            padding: '10px 24px',
-            fontSize: '14px',
-            backgroundColor: 'black',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer'
+            padding: '3px 8px',
+            fontSize: '12px',
+            backgroundColor: '#ddd',
+            color: 'black',
+            border: '2px outset #ccc',
+            cursor: 'pointer',
+            fontFamily: 'Times New Roman, serif'
           }}
         >
-          enter
+          OK
         </button>
       </form>
     </div>
