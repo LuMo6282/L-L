@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm init:*)",
+      "Bash(npm install:*)",
+      "Bash(npx tailwindcss:*)",
+      "Bash(npx tailwindcss@latest init -p)",
+      "Bash(npm run dev:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(taskkill:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(powershell:*)",
+      "Bash(node:*)",
+      "Bash(dir /b \"c:\\\\Users\\\\lucas\\\\Desktop\\\\LG Website\\\\public\\\\images\")",
+      "Bash(dir:*)",
+      "Bash(npm run build:*)",
+      "Bash(del \"\\\\?\\\\C:\\\\Users\\\\lucas\\\\Desktop\\\\LG Website\\\\nul\")",
+      "Bash(git add:*)"
+    ]
+  }
+}
