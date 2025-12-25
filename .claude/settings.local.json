@@ -16,7 +16,10 @@
       "Bash(dir:*)",
       "Bash(npm run build:*)",
       "Bash(del \"\\\\?\\\\C:\\\\Users\\\\lucas\\\\Desktop\\\\LG Website\\\\nul\")",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git branch:*)",
+      "Bash(git push:*)",
+      "Bash(git commit:*)"
     ]
   }
 }
