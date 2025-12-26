@@ -57,7 +57,7 @@ const memoryPages: Record<string, {
     description: '"Just a halloween party"',
     color: '#7EC8E3',
     photos: [
-      { src: 'https://res.cloudinary.com/dlp80acqf/image/upload/IMG_0338_lhpnz0.jpg', alt: 'Washington memory' },
+      { src: 'https://res.cloudinary.com/dlp80acqf/image/upload/v1766607544/IMG_0617_kfixf4.jpg', alt: 'Washington memory' },
       { src: 'https://res.cloudinary.com/dlp80acqf/image/upload/IMG_2655_uxluav.jpg', alt: 'Washington memory' },
       { src: 'https://res.cloudinary.com/dlp80acqf/image/upload/IMG_2458_nfmuim.jpg', alt: 'Washington memory' },
       { src: 'https://res.cloudinary.com/dlp80acqf/image/upload/IMG_1653_uuup28.jpg', alt: 'Washington memory' },
@@ -429,6 +429,9 @@ const memoryPages: Record<string, {
       { src: 'https://res.cloudinary.com/dlp80acqf/image/upload/v1766606659/IMG_0639_qfgvnh.jpg', alt: 'Alaska' },
       { src: 'https://res.cloudinary.com/dlp80acqf/image/upload/v1766606659/IMG_0638_lznvuw.jpg', alt: 'Alaska' },
       { src: 'https://res.cloudinary.com/dlp80acqf/image/upload/v1766606656/IMG_0636_upkuua.jpg', alt: 'Alaska' },
+      { src: 'https://res.cloudinary.com/dlp80acqf/image/upload/v1766755488/IMG_9097_hsrevk.jpg', alt: 'Alaska' },
+      { src: 'https://res.cloudinary.com/dlp80acqf/image/upload/v1766755486/IMG_9142_hoa9qp.jpg', alt: 'Alaska' },
+      { src: 'https://res.cloudinary.com/dlp80acqf/image/upload/v1766755486/IMG_9135_mbmqgd.jpg', alt: 'Alaska' },
     ],
   },
   'road-trip': {
@@ -478,6 +481,11 @@ const memoryPages: Record<string, {
       { src: 'https://res.cloudinary.com/dlp80acqf/image/upload/v1766606564/IMG_0686_gux1z1.jpg', alt: 'Road Trip' },
       { src: 'https://res.cloudinary.com/dlp80acqf/image/upload/v1766606562/IMG_0685_p08ovl.jpg', alt: 'Road Trip' },
       { src: 'https://res.cloudinary.com/dlp80acqf/video/upload/v1766606549/IMG_0080_gq6cah.mov', alt: 'Road Trip', isVideo: true },
+      { src: 'https://res.cloudinary.com/dlp80acqf/video/upload/v1766755407/IMG_3300_d29wpo.mp4', alt: 'Road Trip', isVideo: true },
+      { src: 'https://res.cloudinary.com/dlp80acqf/video/upload/v1766755407/TRS_0000_wlpjcg.mp4', alt: 'Road Trip', isVideo: true },
+      { src: 'https://res.cloudinary.com/dlp80acqf/image/upload/v1766755407/IMG_0830_pm44sj.jpg', alt: 'Road Trip' },
+      { src: 'https://res.cloudinary.com/dlp80acqf/image/upload/v1766755406/IMG_0829_mmho88.jpg', alt: 'Road Trip' },
+      { src: 'https://res.cloudinary.com/dlp80acqf/image/upload/v1766755406/IMG_0831_hr1dqw.jpg', alt: 'Road Trip' },
     ],
   },
   'whidbey': {
@@ -521,7 +529,7 @@ const memoryPages: Record<string, {
     description: 'From Swedish charm to Swiss Alps - our European adventure.',
     color: '#D4C4E8',
     photos: [
-      { src: 'https://res.cloudinary.com/dlp80acqf/image/upload/v1766606752/IMG_0758_qxmo30.jpg', alt: 'Europe' },
+      { src: 'https://res.cloudinary.com/dlp80acqf/image/upload/v1766606794/IMG_0739_t2yb6j.jpg', alt: 'Europe' },
       { src: 'https://res.cloudinary.com/dlp80acqf/image/upload/v1766606813/IMG_0593_yv4scf.jpg', alt: 'Europe' },
       { src: 'https://res.cloudinary.com/dlp80acqf/image/upload/v1766606820/IMG_0751_grmnlr.jpg', alt: 'Europe' },
       { src: 'https://res.cloudinary.com/dlp80acqf/video/upload/v1766606819/IMG_0678_qkon6p.mp4', alt: 'Europe', isVideo: true },

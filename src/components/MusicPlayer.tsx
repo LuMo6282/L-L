@@ -147,21 +147,50 @@ export default function MusicPlayer() {
   const songs = getSongsForPage(pathname)
   const currentSong = songs[currentSongIndex]
 
-  // Autoplay on first load
+  // Autoplay on first load, continuing from intro if applicable
   useEffect(() => {
     if (!hasAutoPlayed && audioRef.current) {
-      const playPromise = audioRef.current.play()
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            setIsPlaying(true)
-            setHasAutoPlayed(true)
-          })
-          .catch(() => {
-            // Autoplay blocked by browser, user needs to click
-            setHasAutoPlayed(true)
-          })
+      const audio = audioRef.current
+
+      // Check if we're continuing from the intro montage
+      const introAudioTime = sessionStorage.getItem('introAudioTime')
+
+      const attemptPlay = async () => {
+        try {
+          // If we have a saved time from the intro, we need to wait for the audio to be ready
+          if (introAudioTime) {
+            const savedTime = parseFloat(introAudioTime)
+            sessionStorage.removeItem('introAudioTime')
+
+            // Wait for audio to be ready if needed
+            if (audio.readyState < 3) {
+              await new Promise<void>((resolve) => {
+                const handleCanPlay = () => {
+                  audio.removeEventListener('canplay', handleCanPlay)
+                  resolve()
+                }
+                audio.addEventListener('canplay', handleCanPlay)
+                // Fallback timeout
+                setTimeout(resolve, 2000)
+              })
+            }
+
+            // Set the time to continue from where intro left off
+            audio.currentTime = savedTime
+          }
+
+          // Now attempt to play
+          await audio.play()
+          setIsPlaying(true)
+          setHasAutoPlayed(true)
+        } catch (err) {
+          // Autoplay blocked by browser, user needs to click
+          console.log('Autoplay blocked:', err)
+          setHasAutoPlayed(true)
+        }
       }
+
+      attemptPlay()
     }
   }, [hasAutoPlayed])
 
@@ -243,26 +272,19 @@ export default function MusicPlayer() {
   }
 
   return (
-    <div style={{
-      position: 'fixed',
-      top: '16px',
-      right: '16px',
-      zIndex: 9999,
-    }}>
-      {/* Song List Dropdown */}
+    <div className="fixed top-auto bottom-4 right-4 sm:top-4 sm:bottom-auto z-[9999]">
+      {/* Song List Dropdown - appears above on mobile, below on desktop */}
       {showSongList && songs.length > 1 && (
-        <div style={{
-          position: 'absolute',
-          top: '100%',
-          right: 0,
-          marginTop: '8px',
-          backgroundColor: 'rgba(0, 0, 0, 0.95)',
-          backdropFilter: 'blur(10px)',
-          borderRadius: '12px',
-          padding: '8px',
-          minWidth: '280px',
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)',
-        }}>
+        <div
+          className="absolute right-0 sm:top-full sm:bottom-auto bottom-full sm:mt-2 mb-2 sm:mb-0"
+          style={{
+            backgroundColor: 'rgba(0, 0, 0, 0.95)',
+            backdropFilter: 'blur(10px)',
+            borderRadius: '12px',
+            padding: '8px',
+            minWidth: '280px',
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)',
+          }}>
           <div style={{
             color: 'rgba(255,255,255,0.5)',
             fontSize: '10px',

@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -12,7 +13,7 @@ const milestones = [
     title: 'Washington',
     description: 'The day our story began.',
     link: '/memories/seattle',
-    image: 'https://res.cloudinary.com/dlp80acqf/image/upload/v1766607527/IMG_0614_lwyxfs.jpg',
+    image: 'https://res.cloudinary.com/dlp80acqf/image/upload/v1766607544/IMG_0617_kfixf4.jpg',
   },
   {
     id: 2,
@@ -114,7 +115,7 @@ const milestones = [
     title: 'Europe',
     description: 'Adventures across the continent.',
     link: '/memories/europe',
-    image: 'https://res.cloudinary.com/dlp80acqf/image/upload/v1766606752/IMG_0758_qxmo30.jpg',
+    image: 'https://res.cloudinary.com/dlp80acqf/image/upload/v1766606794/IMG_0739_t2yb6j.jpg',
   },
 ]
 
@@ -137,6 +138,39 @@ const places = [
 ]
 
 export default function Timeline() {
+  const [elapsed, setElapsed] = useState({ years: 0, days: 0, hours: 0, minutes: 0, seconds: 0 })
+
+  useEffect(() => {
+    // Oct 29, 2023 at 11pm
+    const startDate = new Date('2023-10-29T23:00:00')
+
+    const updateTimer = () => {
+      const now = new Date()
+      let diff = now.getTime() - startDate.getTime()
+
+      const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25))
+      diff -= years * 1000 * 60 * 60 * 24 * 365.25
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+      diff -= days * 1000 * 60 * 60 * 24
+
+      const hours = Math.floor(diff / (1000 * 60 * 60))
+      diff -= hours * 1000 * 60 * 60
+
+      const minutes = Math.floor(diff / (1000 * 60))
+      diff -= minutes * 1000 * 60
+
+      const seconds = Math.floor(diff / 1000)
+
+      setElapsed({ years, days, hours, minutes, seconds })
+    }
+
+    updateTimer()
+    const interval = setInterval(updateTimer, 1000)
+
+    return () => clearInterval(interval)
+  }, [])
+
   return (
     <section id="timeline" className="py-16 sm:py-24 bg-[#1a1d23]">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
@@ -148,6 +182,33 @@ export default function Timeline() {
           transition={{ duration: 0.6 }}
           className="text-center mb-10 sm:mb-16"
         >
+          {/* Time Together Counter */}
+          <div className="flex justify-center gap-3 sm:gap-4 mb-4 font-mono text-white/70">
+            <div className="text-center">
+              <div className="text-lg sm:text-2xl font-light">{elapsed.years}</div>
+              <div className="text-[10px] sm:text-xs uppercase tracking-wider text-white/40">years</div>
+            </div>
+            <span className="text-lg sm:text-2xl text-white/30">:</span>
+            <div className="text-center">
+              <div className="text-lg sm:text-2xl font-light">{elapsed.days}</div>
+              <div className="text-[10px] sm:text-xs uppercase tracking-wider text-white/40">days</div>
+            </div>
+            <span className="text-lg sm:text-2xl text-white/30">:</span>
+            <div className="text-center">
+              <div className="text-lg sm:text-2xl font-light">{String(elapsed.hours).padStart(2, '0')}</div>
+              <div className="text-[10px] sm:text-xs uppercase tracking-wider text-white/40">hours</div>
+            </div>
+            <span className="text-lg sm:text-2xl text-white/30">:</span>
+            <div className="text-center">
+              <div className="text-lg sm:text-2xl font-light">{String(elapsed.minutes).padStart(2, '0')}</div>
+              <div className="text-[10px] sm:text-xs uppercase tracking-wider text-white/40">min</div>
+            </div>
+            <span className="text-lg sm:text-2xl text-white/30">:</span>
+            <div className="text-center">
+              <div className="text-lg sm:text-2xl font-light">{String(elapsed.seconds).padStart(2, '0')}</div>
+              <div className="text-[10px] sm:text-xs uppercase tracking-wider text-white/40">sec</div>
+            </div>
+          </div>
           <span className="text-white/50 text-xs sm:text-sm tracking-widest uppercase">Our Journey</span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-white mt-3 sm:mt-4 mb-4 sm:mb-6">
             Through The Years
