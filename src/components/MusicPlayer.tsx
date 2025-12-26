@@ -126,6 +126,7 @@ export default function MusicPlayer() {
   const [volume, setVolume] = useState(0.5)
   const [duration, setDuration] = useState(0)
   const [currentTime, setCurrentTime] = useState(0)
+  const [showSongList, setShowSongList] = useState(false)
 
   const songs = getSongsForPage(pathname)
   const currentSong = songs[currentSongIndex]
@@ -133,6 +134,7 @@ export default function MusicPlayer() {
   // Reset song index when page changes
   useEffect(() => {
     setCurrentSongIndex(0)
+    setShowSongList(false)
   }, [pathname])
 
   useEffect(() => {
@@ -181,6 +183,12 @@ export default function MusicPlayer() {
     setCurrentSongIndex((prev) => (prev - 1 + songs.length) % songs.length)
   }
 
+  const selectSong = (index: number) => {
+    setCurrentSongIndex(index)
+    setIsPlaying(true)
+    setShowSongList(false)
+  }
+
   const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (audioRef.current) {
       const bounds = e.currentTarget.getBoundingClientRect()
@@ -205,193 +213,331 @@ export default function MusicPlayer() {
       position: 'fixed',
       top: '16px',
       right: '16px',
-      backgroundColor: 'rgba(0, 0, 0, 0.85)',
-      backdropFilter: 'blur(10px)',
-      borderRadius: '12px',
-      padding: '12px',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '12px',
       zIndex: 9999,
-      boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
-      minWidth: '280px'
     }}>
-      <audio
-        ref={audioRef}
-        src={currentSong?.src}
-        onTimeUpdate={handleTimeUpdate}
-        onEnded={handleSongEnd}
-        onLoadedMetadata={handleTimeUpdate}
-      />
-
-      {/* Album Cover */}
-      <div style={{
-        width: '50px',
-        height: '50px',
-        borderRadius: '6px',
-        overflow: 'hidden',
-        flexShrink: 0
-      }}>
-        <img
-          src={currentSong?.cover}
-          alt={currentSong?.title}
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover'
-          }}
-        />
-      </div>
-
-      {/* Song Info & Controls */}
-      <div style={{ flex: 1, minWidth: 0 }}>
-        {/* Title & Artist */}
+      {/* Song List Dropdown */}
+      {showSongList && songs.length > 1 && (
         <div style={{
-          color: 'white',
-          fontSize: '13px',
-          fontWeight: 600,
-          whiteSpace: 'nowrap',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis'
+          position: 'absolute',
+          top: '100%',
+          right: 0,
+          marginTop: '8px',
+          backgroundColor: 'rgba(0, 0, 0, 0.95)',
+          backdropFilter: 'blur(10px)',
+          borderRadius: '12px',
+          padding: '8px',
+          minWidth: '280px',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)',
         }}>
-          {currentSong?.title}
-        </div>
-        <div style={{
-          color: 'rgba(255,255,255,0.6)',
-          fontSize: '11px',
-          whiteSpace: 'nowrap',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis'
-        }}>
-          {currentSong?.artist}
-        </div>
-
-        {/* Progress Bar */}
-        <div
-          onClick={handleProgressClick}
-          style={{
-            width: '100%',
-            height: '4px',
-            backgroundColor: 'rgba(255,255,255,0.2)',
-            borderRadius: '2px',
-            marginTop: '8px',
-            cursor: 'pointer',
-            position: 'relative'
-          }}
-        >
           <div style={{
-            width: `${progress}%`,
-            height: '100%',
-            backgroundColor: 'white',
-            borderRadius: '2px',
-            transition: 'width 0.1s linear'
-          }} />
+            color: 'rgba(255,255,255,0.5)',
+            fontSize: '10px',
+            textTransform: 'uppercase',
+            letterSpacing: '1px',
+            padding: '8px 12px 4px',
+          }}>
+            Songs on this page
+          </div>
+          {songs.map((song, index) => (
+            <div
+              key={index}
+              onClick={() => selectSong(index)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                padding: '10px 12px',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                backgroundColor: index === currentSongIndex ? 'rgba(255,255,255,0.1)' : 'transparent',
+                transition: 'background-color 0.2s',
+              }}
+              onMouseEnter={(e) => {
+                if (index !== currentSongIndex) {
+                  e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)'
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (index !== currentSongIndex) {
+                  e.currentTarget.style.backgroundColor = 'transparent'
+                }
+              }}
+            >
+              <img
+                src={song.cover}
+                alt={song.title}
+                style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '4px',
+                  objectFit: 'cover',
+                }}
+              />
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{
+                  color: index === currentSongIndex ? 'white' : 'rgba(255,255,255,0.9)',
+                  fontSize: '13px',
+                  fontWeight: index === currentSongIndex ? 600 : 400,
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}>
+                  {song.title}
+                </div>
+                <div style={{
+                  color: 'rgba(255,255,255,0.5)',
+                  fontSize: '11px',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}>
+                  {song.artist}
+                </div>
+              </div>
+              {index === currentSongIndex && isPlaying && (
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '2px',
+                }}>
+                  <div style={{ width: '3px', height: '12px', backgroundColor: 'white', borderRadius: '1px', animation: 'musicBar1 0.5s ease-in-out infinite' }} />
+                  <div style={{ width: '3px', height: '16px', backgroundColor: 'white', borderRadius: '1px', animation: 'musicBar2 0.5s ease-in-out infinite 0.1s' }} />
+                  <div style={{ width: '3px', height: '10px', backgroundColor: 'white', borderRadius: '1px', animation: 'musicBar3 0.5s ease-in-out infinite 0.2s' }} />
+                </div>
+              )}
+            </div>
+          ))}
+          <style>{`
+            @keyframes musicBar1 {
+              0%, 100% { height: 12px; }
+              50% { height: 6px; }
+            }
+            @keyframes musicBar2 {
+              0%, 100% { height: 16px; }
+              50% { height: 8px; }
+            }
+            @keyframes musicBar3 {
+              0%, 100% { height: 10px; }
+              50% { height: 14px; }
+            }
+          `}</style>
         </div>
+      )}
 
-        {/* Time */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          fontSize: '9px',
-          color: 'rgba(255,255,255,0.5)',
-          marginTop: '2px'
-        }}>
-          <span>{formatTime(currentTime)}</span>
-          <span>{formatTime(duration)}</span>
-        </div>
-      </div>
-
-      {/* Controls */}
+      {/* Main Player */}
       <div style={{
+        backgroundColor: 'rgba(0, 0, 0, 0.85)',
+        backdropFilter: 'blur(10px)',
+        borderRadius: '12px',
+        padding: '12px',
         display: 'flex',
         alignItems: 'center',
-        gap: '4px'
+        gap: '12px',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+        minWidth: '280px'
       }}>
-        <button
-          onClick={prevSong}
-          style={{
-            background: 'none',
-            border: 'none',
-            color: 'white',
-            cursor: 'pointer',
-            padding: '4px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            opacity: 0.8
-          }}
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
-          </svg>
-        </button>
-        <button
-          onClick={togglePlay}
-          style={{
-            background: 'white',
-            border: 'none',
-            borderRadius: '50%',
-            width: '32px',
-            height: '32px',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-        >
-          {isPlaying ? (
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="black">
-              <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-            </svg>
-          ) : (
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="black">
-              <path d="M8 5v14l11-7z"/>
-            </svg>
-          )}
-        </button>
-        <button
-          onClick={nextSong}
-          style={{
-            background: 'none',
-            border: 'none',
-            color: 'white',
-            cursor: 'pointer',
-            padding: '4px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            opacity: 0.8
-          }}
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
-          </svg>
-        </button>
-      </div>
+        <audio
+          ref={audioRef}
+          src={currentSong?.src}
+          onTimeUpdate={handleTimeUpdate}
+          onEnded={handleSongEnd}
+          onLoadedMetadata={handleTimeUpdate}
+        />
 
-      {/* Volume */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '4px'
-      }}>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="rgba(255,255,255,0.7)">
-          <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
-        </svg>
-        <input
-          type="range"
-          min="0"
-          max="1"
-          step="0.01"
-          value={volume}
-          onChange={(e) => setVolume(parseFloat(e.target.value))}
+        {/* Album Cover - Clickable */}
+        <div
+          onClick={() => songs.length > 1 && setShowSongList(!showSongList)}
           style={{
             width: '50px',
-            height: '4px',
-            cursor: 'pointer',
-            accentColor: 'white'
+            height: '50px',
+            borderRadius: '6px',
+            overflow: 'hidden',
+            flexShrink: 0,
+            cursor: songs.length > 1 ? 'pointer' : 'default',
+            position: 'relative',
           }}
-        />
+        >
+          <img
+            src={currentSong?.cover}
+            alt={currentSong?.title}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              transition: 'transform 0.2s',
+            }}
+          />
+          {songs.length > 1 && (
+            <div style={{
+              position: 'absolute',
+              bottom: '2px',
+              right: '2px',
+              backgroundColor: 'rgba(0,0,0,0.7)',
+              borderRadius: '3px',
+              padding: '1px 4px',
+              fontSize: '9px',
+              color: 'white',
+            }}>
+              {currentSongIndex + 1}/{songs.length}
+            </div>
+          )}
+        </div>
+
+        {/* Song Info & Controls */}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          {/* Title & Artist - Clickable */}
+          <div
+            onClick={() => songs.length > 1 && setShowSongList(!showSongList)}
+            style={{ cursor: songs.length > 1 ? 'pointer' : 'default' }}
+          >
+            <div style={{
+              color: 'white',
+              fontSize: '13px',
+              fontWeight: 600,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis'
+            }}>
+              {currentSong?.title}
+            </div>
+            <div style={{
+              color: 'rgba(255,255,255,0.6)',
+              fontSize: '11px',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis'
+            }}>
+              {currentSong?.artist}
+            </div>
+          </div>
+
+          {/* Progress Bar */}
+          <div
+            onClick={handleProgressClick}
+            style={{
+              width: '100%',
+              height: '4px',
+              backgroundColor: 'rgba(255,255,255,0.2)',
+              borderRadius: '2px',
+              marginTop: '8px',
+              cursor: 'pointer',
+              position: 'relative'
+            }}
+          >
+            <div style={{
+              width: `${progress}%`,
+              height: '100%',
+              backgroundColor: 'white',
+              borderRadius: '2px',
+              transition: 'width 0.1s linear'
+            }} />
+          </div>
+
+          {/* Time */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            fontSize: '9px',
+            color: 'rgba(255,255,255,0.5)',
+            marginTop: '2px'
+          }}>
+            <span>{formatTime(currentTime)}</span>
+            <span>{formatTime(duration)}</span>
+          </div>
+        </div>
+
+        {/* Controls */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '4px'
+        }}>
+          <button
+            onClick={prevSong}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'white',
+              cursor: 'pointer',
+              padding: '4px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              opacity: 0.8
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+            </svg>
+          </button>
+          <button
+            onClick={togglePlay}
+            style={{
+              background: 'white',
+              border: 'none',
+              borderRadius: '50%',
+              width: '32px',
+              height: '32px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            {isPlaying ? (
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="black">
+                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+              </svg>
+            ) : (
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="black">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+            )}
+          </button>
+          <button
+            onClick={nextSong}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'white',
+              cursor: 'pointer',
+              padding: '4px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              opacity: 0.8
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
+            </svg>
+          </button>
+        </div>
+
+        {/* Volume */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '4px'
+        }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="rgba(255,255,255,0.7)">
+            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+          </svg>
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value={volume}
+            onChange={(e) => setVolume(parseFloat(e.target.value))}
+            style={{
+              width: '50px',
+              height: '4px',
+              cursor: 'pointer',
+              accentColor: 'white'
+            }}
+          />
+        </div>
       </div>
     </div>
   )
