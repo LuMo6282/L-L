@@ -405,6 +405,11 @@ const memoryPages: Record<string, {
       { src: 'https://res.cloudinary.com/dlp80acqf/image/upload/v1766608228/IMG_0941_ycuwew.jpg', alt: 'Rise Festival' },
       { src: 'https://res.cloudinary.com/dlp80acqf/image/upload/v1766608225/IMG_0939_cyjmpf.jpg', alt: 'Rise Festival' },
       { src: 'https://res.cloudinary.com/dlp80acqf/image/upload/v1766608221/IMG_0936_x1fbpn.jpg', alt: 'Rise Festival' },
+      { src: 'https://res.cloudinary.com/dlp80acqf/video/upload/v1766758688/IMG_0921_do13m9.mov', alt: 'Rise Festival', isVideo: true },
+      { src: 'https://res.cloudinary.com/dlp80acqf/video/upload/v1766758685/IMG_0952_zp2emf.mov', alt: 'Rise Festival', isVideo: true },
+      { src: 'https://res.cloudinary.com/dlp80acqf/image/upload/v1766758685/IMG_0836_gtnmu8.jpg', alt: 'Rise Festival' },
+      { src: 'https://res.cloudinary.com/dlp80acqf/image/upload/v1766758685/IMG_0834_xcmq8x.jpg', alt: 'Rise Festival' },
+      { src: 'https://res.cloudinary.com/dlp80acqf/image/upload/v1766758685/IMG_0835_uldkaf.jpg', alt: 'Rise Festival' },
     ],
   },
   'alaska': {

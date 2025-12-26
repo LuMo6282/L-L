@@ -95,42 +95,8 @@ const allSongKeys = [
   'phenomenon',
 ]
 
-// Map pages/trips to their songs
-const pageSongs: Record<string, string[]> = {
-  '/': allSongKeys, // All songs on home
-  // Existing trips
-  '/trips/whistler': ['american-boy', ...allSongKeys.filter(k => k !== 'american-boy')],
-  '/trips/whidbey-island': ['a-moment-apart', ...allSongKeys.filter(k => k !== 'a-moment-apart')],
-  '/trips/alaska': ['think-im-in-love', ...allSongKeys.filter(k => k !== 'think-im-in-love')],
-  '/trips/roadtrip': ['tomorrows-dust', ...allSongKeys.filter(k => k !== 'tomorrows-dust')],
-  '/trips/europe': ['15-step', ...allSongKeys.filter(k => k !== '15-step')],
-  // Additional trips (add these categories if needed)
-  '/trips/washington': ['work-out', ...allSongKeys.filter(k => k !== 'work-out')],
-  '/trips/mexico': ['i-will-survive', ...allSongKeys.filter(k => k !== 'i-will-survive')],
-  '/trips/tolo': ['sticky', ...allSongKeys.filter(k => k !== 'sticky')],
-  '/trips/prom': ['sticky', ...allSongKeys.filter(k => k !== 'sticky')],
-  '/trips/telluride': ['sticky', ...allSongKeys.filter(k => k !== 'sticky')],
-  '/trips/summer-week': ['a-moment-apart', ...allSongKeys.filter(k => k !== 'a-moment-apart')],
-  '/trips/sand-dunes': ['i-play-you-listen', ...allSongKeys.filter(k => k !== 'i-play-you-listen')],
-  '/trips/rise-festival': ['innerbloom', ...allSongKeys.filter(k => k !== 'innerbloom')],
-}
-
-function getSongsForPage(pathname: string): Song[] {
-  // Check for exact match first
-  if (pageSongs[pathname]) {
-    return pageSongs[pathname].map(key => allSongs[key])
-  }
-
-  // Check for partial matches (for dynamic routes)
-  for (const [route, songKeys] of Object.entries(pageSongs)) {
-    if (pathname.includes(route.replace('/trips/', ''))) {
-      return songKeys.map(key => allSongs[key])
-    }
-  }
-
-  // Default songs for pages without specific music
-  return [allSongs['tomorrows-dust'], allSongs['innerbloom'], allSongs['a-moment-apart']]
-}
+// Global song list - same songs everywhere, never switches
+const globalSongs: Song[] = allSongKeys.map(key => allSongs[key])
 
 export default function MusicPlayer() {
   const pathname = usePathname()
@@ -144,7 +110,7 @@ export default function MusicPlayer() {
   const [showSongList, setShowSongList] = useState(false)
   const [hasAutoPlayed, setHasAutoPlayed] = useState(false)
 
-  const songs = getSongsForPage(pathname)
+  const songs = globalSongs
   const currentSong = songs[currentSongIndex]
 
   // Autoplay on first load, continuing from intro if applicable
@@ -194,9 +160,8 @@ export default function MusicPlayer() {
     }
   }, [hasAutoPlayed])
 
-  // Reset song index when page changes
+  // Just close song list when page changes, don't reset song
   useEffect(() => {
-    setCurrentSongIndex(0)
     setShowSongList(false)
   }, [pathname])
 
