@@ -74,12 +74,12 @@ export default function HeroSlider() {
           </div>
         ))}
 
-        {/* Shaded card panel on left side extending to bottom */}
-        <div className="absolute top-0 bottom-0 left-0 w-[320px] md:w-[400px] lg:w-[450px] bg-gradient-to-r from-black/70 via-black/50 to-transparent z-[1]" />
+        {/* Shaded card panel on left side extending to bottom - narrower on mobile */}
+        <div className="absolute top-0 bottom-0 left-0 w-[260px] sm:w-[300px] md:w-[400px] lg:w-[450px] bg-gradient-to-r from-black/80 via-black/60 to-transparent z-[1]" />
 
         {/* Location Info - Left side, vertically centered */}
-        <div className="absolute top-0 bottom-0 left-0 w-[320px] md:w-[400px] lg:w-[450px] flex items-center z-20">
-          <div className="pl-6 md:pl-12 lg:pl-16">
+        <div className="absolute top-0 bottom-0 left-0 w-[260px] sm:w-[300px] md:w-[400px] lg:w-[450px] flex items-center z-20">
+          <div className="pl-4 sm:pl-6 md:pl-12 lg:pl-16 pr-2">
             <AnimatePresence mode="wait">
               <motion.div
                 key={heroBackgrounds[currentBgIndex].location}
@@ -87,15 +87,15 @@ export default function HeroSlider() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.4 }}
-                className="flex flex-col gap-3"
+                className="flex flex-col gap-2 sm:gap-3"
               >
                 {/* Subtitle */}
-                <span className="text-white/60 text-xs md:text-sm tracking-[0.3em] uppercase font-light">
+                <span className="text-white/60 text-[10px] sm:text-xs md:text-sm tracking-[0.2em] sm:tracking-[0.3em] uppercase font-light">
                   {heroBackgrounds[currentBgIndex].subtitle}
                 </span>
 
                 {/* Location Name */}
-                <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white tracking-tight leading-none">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white tracking-tight leading-none">
                   {heroBackgrounds[currentBgIndex].location}
                 </h1>
 
@@ -104,11 +104,11 @@ export default function HeroSlider() {
                   <motion.div
                     whileHover={{ scale: 1.02, x: 5 }}
                     whileTap={{ scale: 0.98 }}
-                    className="mt-2 inline-flex items-center gap-3 px-5 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full hover:bg-white/20 hover:border-white/30 transition-all group cursor-pointer"
+                    className="mt-1 sm:mt-2 inline-flex items-center gap-2 sm:gap-3 px-4 sm:px-5 py-2.5 sm:py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full hover:bg-white/20 hover:border-white/30 transition-all group cursor-pointer"
                   >
-                    <span className="text-white text-sm font-medium">Explore memories</span>
+                    <span className="text-white text-xs sm:text-sm font-medium">Explore memories</span>
                     <svg
-                      className="w-4 h-4 text-white transition-transform group-hover:translate-x-1"
+                      className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white transition-transform group-hover:translate-x-1"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -122,33 +122,35 @@ export default function HeroSlider() {
           </div>
         </div>
 
-        {/* Left Arrow - outer edge */}
+        {/* Left Arrow - larger touch target on mobile */}
         <motion.button
           onClick={prevImage}
           whileHover={{ x: -3 }}
           whileTap={{ scale: 0.95 }}
-          className="absolute left-4 md:left-6 top-1/2 -translate-y-1/2 z-30 text-white/60 hover:text-white transition-colors"
+          className="absolute left-2 sm:left-4 md:left-6 top-1/2 -translate-y-1/2 z-30 text-white/60 hover:text-white transition-colors p-2 sm:p-1"
+          aria-label="Previous image"
         >
-          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
           </svg>
         </motion.button>
 
-        {/* Right Arrow - outer edge */}
+        {/* Right Arrow - larger touch target on mobile */}
         <motion.button
           onClick={nextImage}
           whileHover={{ x: 3 }}
           whileTap={{ scale: 0.95 }}
-          className="absolute right-4 md:right-6 top-1/2 -translate-y-1/2 z-20 text-white/60 hover:text-white transition-colors"
+          className="absolute right-2 sm:right-4 md:right-6 top-1/2 -translate-y-1/2 z-20 text-white/60 hover:text-white transition-colors p-2 sm:p-1"
+          aria-label="Next image"
         >
-          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
           </svg>
         </motion.button>
 
         {/* Image Counter */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20">
-          <span className="text-white/60 text-sm font-light tracking-wider">
+        <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-20">
+          <span className="text-white/60 text-xs sm:text-sm font-light tracking-wider">
             {currentBgIndex + 1} / {heroBackgrounds.length}
           </span>
         </div>

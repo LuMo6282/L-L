@@ -23,59 +23,59 @@ const loveNotes = [
 
 export default function LoveNotes() {
   return (
-    <section id="notes" className="py-24 gradient-romantic">
-      <div className="max-w-5xl mx-auto px-6">
+    <section id="notes" className="py-16 sm:py-24 gradient-romantic">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-10 sm:mb-16"
         >
-          <span className="text-dustyRose text-sm tracking-widest uppercase">From The Heart</span>
-          <h2 className="text-4xl md:text-5xl font-serif text-charcoal mt-4 mb-6">
+          <span className="text-dustyRose text-xs sm:text-sm tracking-widest uppercase">From The Heart</span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-charcoal mt-3 sm:mt-4 mb-4 sm:mb-6">
             Love Notes
           </h2>
-          <p className="text-warmGray max-w-xl mx-auto">
+          <p className="text-warmGray max-w-xl mx-auto text-sm sm:text-base">
             Little reminders of how much you mean to me.
           </p>
         </motion.div>
 
         {/* Notes Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8">
           {loveNotes.map((note, index) => (
             <motion.div
               key={note.id}
-              initial={{ opacity: 0, y: 30, rotate: -2 + index * 2 }}
-              whileInView={{ opacity: 1, y: 0, rotate: -2 + index * 2 }}
+              initial={{ opacity: 0, y: 30, rotate: 0 }}
+              whileInView={{ opacity: 1, y: 0, rotate: index === 1 ? 0 : (index === 0 ? -1 : 1) }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.15 }}
               whileHover={{
-                scale: 1.05,
+                scale: 1.03,
                 rotate: 0,
                 boxShadow: '0 20px 40px rgba(139, 126, 116, 0.15)'
               }}
-              className="bg-white p-8 rounded-lg shadow-md relative"
-              style={{ transform: `rotate(${-2 + index * 2}deg)` }}
+              className="bg-white p-5 sm:p-8 rounded-lg shadow-md relative"
+              style={{ transform: `rotate(${index === 1 ? 0 : (index === 0 ? -1 : 1)}deg)` }}
             >
               {/* Quote mark */}
-              <span className="absolute top-4 left-4 text-5xl text-rose/30 font-serif leading-none">
+              <span className="absolute top-3 sm:top-4 left-3 sm:left-4 text-4xl sm:text-5xl text-rose/30 font-serif leading-none">
                 "
               </span>
 
               {/* Note content */}
-              <p className="text-charcoal font-serif text-lg leading-relaxed pt-8 pb-4 italic">
+              <p className="text-charcoal font-serif text-base sm:text-lg leading-relaxed pt-6 sm:pt-8 pb-3 sm:pb-4 italic">
                 {note.note}
               </p>
 
               {/* Signature */}
               <div className="flex items-center justify-end">
-                <span className="text-dustyRose text-xl font-serif">— {note.from}</span>
+                <span className="text-dustyRose text-lg sm:text-xl font-serif">— {note.from}</span>
               </div>
 
               {/* Decorative tape effect */}
-              <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-12 h-6 bg-rose/40 rounded-sm" />
+              <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-10 sm:w-12 h-5 sm:h-6 bg-rose/40 rounded-sm" />
             </motion.div>
           ))}
         </div>
@@ -86,24 +86,24 @@ export default function LoveNotes() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mt-20"
+          className="text-center mt-12 sm:mt-20"
         >
-          <div className="inline-block bg-white/70 backdrop-blur-sm rounded-2xl p-8 md:p-12 shadow-lg border border-rose/20">
+          <div className="inline-block bg-white/70 backdrop-blur-sm rounded-xl sm:rounded-2xl p-6 sm:p-8 md:p-12 shadow-lg border border-rose/20 mx-4 sm:mx-0">
             <motion.span
               animate={{ scale: [1, 1.1, 1] }}
               transition={{ duration: 2, repeat: Infinity }}
-              className="text-5xl block mb-6"
+              className="text-4xl sm:text-5xl block mb-4 sm:mb-6"
             >
               💕
             </motion.span>
-            <h3 className="text-2xl md:text-3xl font-serif text-charcoal mb-4">
+            <h3 className="text-xl sm:text-2xl md:text-3xl font-serif text-charcoal mb-3 sm:mb-4">
               Happy 3rd Anniversary
             </h3>
-            <p className="text-warmGray max-w-md mx-auto leading-relaxed">
+            <p className="text-warmGray max-w-md mx-auto leading-relaxed text-sm sm:text-base">
               To three years of laughter, love, and endless memories.
               Here's to many more adventures together.
             </p>
-            <p className="text-dustyRose font-serif text-lg mt-6 italic">
+            <p className="text-dustyRose font-serif text-base sm:text-lg mt-4 sm:mt-6 italic">
               Forever yours ♥
             </p>
           </div>

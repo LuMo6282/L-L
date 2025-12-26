@@ -7,30 +7,30 @@ import { categories } from '@/data/categories'
 
 export default function CategoryGrid() {
   return (
-    <section id="adventures" className="py-24 bg-[var(--cream)]">
-      <div className="max-w-7xl mx-auto px-6">
+    <section id="adventures" className="py-16 sm:py-24 bg-[var(--cream)]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-10 sm:mb-16"
         >
-          <span className="text-[var(--dusty-rose)] text-sm tracking-widest uppercase">
+          <span className="text-[var(--dusty-rose)] text-xs sm:text-sm tracking-widest uppercase">
             Our Travels
           </span>
-          <h2 className="text-4xl md:text-5xl font-serif text-[var(--charcoal)] mt-4 mb-6">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-[var(--charcoal)] mt-3 sm:mt-4 mb-4 sm:mb-6">
             Adventures Together
           </h2>
-          <p className="text-[var(--warm-gray)] max-w-2xl mx-auto">
+          <p className="text-[var(--warm-gray)] max-w-2xl mx-auto text-sm sm:text-base px-2">
             From mountain peaks to ocean shores, every destination becomes
             more beautiful when we explore it together.
           </p>
         </motion.div>
 
         {/* Category Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
           {categories.map((category, index) => (
             <CategoryCard key={category.id} category={category} index={index} />
           ))}

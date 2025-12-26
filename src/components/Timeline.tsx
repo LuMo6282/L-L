@@ -138,38 +138,120 @@ const places = [
 
 export default function Timeline() {
   return (
-    <section id="timeline" className="py-24 bg-[#1a1d23]">
-      <div className="max-w-6xl mx-auto px-6">
+    <section id="timeline" className="py-16 sm:py-24 bg-[#1a1d23]">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-10 sm:mb-16"
         >
-          <span className="text-white/50 text-sm tracking-widest uppercase">Our Journey</span>
-          <h2 className="text-4xl md:text-5xl font-serif text-white mt-4 mb-6">
+          <span className="text-white/50 text-xs sm:text-sm tracking-widest uppercase">Our Journey</span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-white mt-3 sm:mt-4 mb-4 sm:mb-6">
             Through The Years
           </h2>
-          <p className="text-white/60 max-w-2xl mx-auto">
+          <p className="text-white/60 max-w-2xl mx-auto text-sm sm:text-base">
             Every moment with you has been a chapter in our beautiful story.
           </p>
         </motion.div>
 
         {/* Timeline */}
         <div className="relative">
-          {/* Center Line - Desktop */}
+          {/* Center Line - Desktop only */}
           <div className="absolute left-1/2 transform -translate-x-1/2 w-px h-full bg-gradient-to-b from-white/20 via-white/10 to-white/20 hidden md:block" />
 
-          {/* Mobile: Simple line on left */}
-          <div className="absolute left-4 top-0 w-px h-full bg-gradient-to-b from-white/20 via-white/10 to-white/20 md:hidden" />
+          {/* Mobile: Line on left side */}
+          <div className="absolute left-[18px] top-0 w-px h-full bg-gradient-to-b from-white/20 via-white/10 to-white/20 md:hidden" />
 
-          {/* Timeline Items */}
-          <div className="relative" style={{ minHeight: `${milestones.length * 180}px` }}>
+          {/* Timeline Items - Mobile: stacked cards, Desktop: alternating absolute */}
+          {/* Mobile view */}
+          <div className="flex flex-col gap-5 md:hidden">
+            {milestones.map((milestone) => (
+              <motion.div
+                key={milestone.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="relative pl-10 pr-2"
+              >
+                {/* Timeline dot - mobile */}
+                <div className="absolute left-[14px] top-4 w-2 h-2 bg-white/40 rounded-full" />
+                <Link href={milestone.link}>
+                  <motion.div
+                    whileHover={{ y: -3, scale: 1.01 }}
+                    className="bg-white/5 backdrop-blur-sm rounded-xl overflow-hidden border border-white/10 hover:border-white/20 transition-all cursor-pointer group"
+                  >
+                    {/* Image */}
+                    <div className="relative h-32 w-full bg-white/10 overflow-hidden">
+                      {milestone.tripleImage ? (
+                        <div className="absolute inset-0 flex overflow-hidden">
+                          <div className="relative flex-1 h-full" style={{ clipPath: 'polygon(0 0, 100% 0, 80% 100%, 0 100%)' }}>
+                            <Image
+                              src={milestone.tripleImage[0]}
+                              alt={`${milestone.title} - Odesza`}
+                              fill
+                              className="object-cover"
+                            />
+                          </div>
+                          <div className="relative flex-1 h-full -ml-[10%]" style={{ clipPath: 'polygon(20% 0, 100% 0, 80% 100%, 0 100%)' }}>
+                            <Image
+                              src={milestone.tripleImage[1]}
+                              alt={`${milestone.title} - ATV`}
+                              fill
+                              className="object-cover"
+                            />
+                          </div>
+                          <div className="relative flex-1 h-full -ml-[10%]" style={{ clipPath: 'polygon(20% 0, 100% 0, 100% 100%, 0 100%)' }}>
+                            <Image
+                              src={milestone.tripleImage[2]}
+                              alt={`${milestone.title} - Enchantments`}
+                              fill
+                              className="object-cover"
+                            />
+                          </div>
+                        </div>
+                      ) : milestone.image && milestone.image !== '/placeholder-memory.jpg' ? (
+                        <Image
+                          src={milestone.image}
+                          alt={milestone.title}
+                          fill
+                          className="object-cover"
+                          style={{ objectPosition: milestone.imagePosition || 'center center' }}
+                        />
+                      ) : (
+                        <div className="absolute inset-0 flex items-center justify-center text-white/30">
+                          <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Content */}
+                    <div className="p-3">
+                      <span className="text-white/40 text-xs font-medium tracking-wide">
+                        {milestone.date}
+                      </span>
+                      <h3 className="text-base font-serif text-white mt-1 mb-1">
+                        {milestone.title}
+                      </h3>
+                      <p className="text-white/50 leading-relaxed text-xs">
+                        {milestone.description}
+                      </p>
+                    </div>
+                  </motion.div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Desktop view */}
+          <div className="hidden md:block relative" style={{ minHeight: `${milestones.length * 180}px` }}>
             {milestones.map((milestone, index) => {
               const side = index % 2 === 0 ? 'left' : 'right'
-              const topPosition = index * 180 // Position each card at curve peaks
 
               return (
                 <motion.div
@@ -178,15 +260,13 @@ export default function Timeline() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true, margin: '-50px' }}
                   transition={{ duration: 0.5, delay: 0.1 }}
-                  className={`absolute w-full md:w-5/12 px-4 md:px-0 ${
+                  className={`absolute w-5/12 ${
                     side === 'left'
-                      ? 'left-0 md:left-0 md:pr-8'
-                      : 'left-0 md:left-auto md:right-0 md:pl-8'
+                      ? 'left-0 pr-8'
+                      : 'left-auto right-0 pl-8'
                   }`}
                   style={{
-                    top: `${topPosition}px`,
-                    // On mobile, stack normally
-                    position: 'absolute'
+                    top: `${index * 180}px`,
                   }}
                 >
                   <Link href={milestone.link}>
@@ -281,25 +361,25 @@ export default function Timeline() {
       </div>
 
       {/* Places Section */}
-      <div className="max-w-6xl mx-auto px-6 mt-32 pt-16 border-t border-white/10">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-20 sm:mt-32 pt-12 sm:pt-16 border-t border-white/10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="text-center mb-8 sm:mb-12"
         >
-          <span className="text-white/50 text-sm tracking-widest uppercase">Special Locations</span>
-          <h2 className="text-4xl md:text-5xl font-serif text-white mt-4 mb-6">
+          <span className="text-white/50 text-xs sm:text-sm tracking-widest uppercase">Special Locations</span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-white mt-3 sm:mt-4 mb-4 sm:mb-6">
             Places
           </h2>
-          <p className="text-white/60 max-w-2xl mx-auto">
+          <p className="text-white/60 max-w-2xl mx-auto text-sm sm:text-base">
             Destinations that hold special meaning in our journey.
           </p>
         </motion.div>
 
         {/* Places Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8">
           {places.map((place, index) => (
             <motion.div
               key={place.id}
@@ -311,10 +391,10 @@ export default function Timeline() {
               <Link href={place.link}>
                 <motion.div
                   whileHover={{ y: -5, scale: 1.02 }}
-                  className="bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10 hover:border-white/20 transition-all cursor-pointer group"
+                  className="bg-white/5 backdrop-blur-sm rounded-xl md:rounded-2xl overflow-hidden border border-white/10 hover:border-white/20 transition-all cursor-pointer group"
                 >
                   {/* Image */}
-                  <div className="relative h-48 w-full bg-white/10 overflow-hidden">
+                  <div className="relative h-40 md:h-48 w-full bg-white/10 overflow-hidden">
                     {place.image && place.image !== '/placeholder-memory.jpg' ? (
                       <Image
                         src={place.image}
@@ -334,9 +414,9 @@ export default function Timeline() {
                   </div>
 
                   {/* Content */}
-                  <div className="p-6">
+                  <div className="p-4 md:p-6">
                     {/* Title */}
-                    <h3 className="text-xl md:text-2xl font-serif text-white mb-2 group-hover:text-white/90 transition-colors">
+                    <h3 className="text-lg md:text-2xl font-serif text-white mb-1 md:mb-2 group-hover:text-white/90 transition-colors">
                       {place.title}
                     </h3>
 

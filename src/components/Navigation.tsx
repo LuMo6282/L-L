@@ -76,12 +76,12 @@ export default function Navigation() {
         isScrolled ? 'bg-[#2d2d2d] shadow-lg' : 'bg-transparent'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 py-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/">
             <motion.span
-              className={`text-2xl font-serif cursor-pointer transition-colors duration-300 ${isScrolled ? 'text-[var(--cream)]' : 'text-[var(--charcoal)]'}`}
+              className={`text-xl sm:text-2xl font-serif cursor-pointer transition-colors duration-300 ${isScrolled ? 'text-[var(--cream)]' : 'text-[var(--charcoal)]'}`}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -96,15 +96,15 @@ export default function Navigation() {
             ))}
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Button - larger touch target */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className={`md:hidden p-2 transition-colors duration-300 ${isScrolled ? 'text-[var(--cream)]' : 'text-[var(--charcoal)]'}`}
+            className={`md:hidden p-3 -mr-2 transition-colors duration-300 ${isScrolled ? 'text-[var(--cream)]' : 'text-[var(--charcoal)]'}`}
             aria-label="Toggle menu"
           >
             <motion.div
               animate={isMobileMenuOpen ? 'open' : 'closed'}
-              className="w-6 h-5 flex flex-col justify-between"
+              className="w-5 h-4 sm:w-6 sm:h-5 flex flex-col justify-between"
             >
               <motion.span
                 variants={{

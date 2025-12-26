@@ -1,10 +1,18 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import PasswordGate from '@/components/PasswordGate'
+import MusicPlayer from '@/components/MusicPlayer'
 
 export const metadata: Metadata = {
   title: 'L&L Scrapbook',
   description: 'A scrapbook of our beautiful journey together - 3 years of memories',
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 }
 
 export default function RootLayout({
@@ -24,6 +32,7 @@ export default function RootLayout({
       </head>
       <body>
         <PasswordGate>
+          <MusicPlayer />
           {children}
         </PasswordGate>
       </body>
