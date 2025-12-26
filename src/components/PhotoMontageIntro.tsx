@@ -153,6 +153,7 @@ interface PhotoMontageIntroProps {
 export default function PhotoMontageIntro({ onComplete }: PhotoMontageIntroProps) {
   const [isReady, setIsReady] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
+  const [isPaused, setIsPaused] = useState(false)
   const audioRef = useRef<HTMLAudioElement>(null)
   const animationRef = useRef<number | null>(null)
   const hasCompletedRef = useRef(false)
@@ -244,6 +245,12 @@ export default function PhotoMontageIntro({ onComplete }: PhotoMontageIntroProps
           const beatIndex = Math.floor(phaseTime / BEAT_INTERVAL_SEC)
           const photoIndex = beatIndex % shuffledWashington.current.length
 
+          // Initialize to first photo if not set yet (prevents black flash)
+          if (photoIndexRefs.current.q1 === -1) {
+            updatePhotoDisplay(q1Ref, 0, -1, shuffledWashington.current)
+            photoIndexRefs.current.q1 = 0
+          }
+
           if (photoIndex !== photoIndexRefs.current.q1) {
             updatePhotoDisplay(q1Ref, photoIndex, photoIndexRefs.current.q1, shuffledWashington.current)
             photoIndexRefs.current.q1 = photoIndex
@@ -267,6 +274,12 @@ export default function PhotoMontageIntro({ onComplete }: PhotoMontageIntroProps
           const phaseTime = t - SCHEDULE.montage1End
           const beatIndex = Math.floor(phaseTime / BEAT_INTERVAL_SEC)
           const photoIndex = beatIndex % shuffledFormals.current.length
+
+          // Initialize to first photo if not set yet (prevents black flash)
+          if (photoIndexRefs.current.q2 === -1) {
+            updatePhotoDisplay(q2Ref, 0, -1, shuffledFormals.current)
+            photoIndexRefs.current.q2 = 0
+          }
 
           if (photoIndex !== photoIndexRefs.current.q2) {
             updatePhotoDisplay(q2Ref, photoIndex, photoIndexRefs.current.q2, shuffledFormals.current)
@@ -292,6 +305,12 @@ export default function PhotoMontageIntro({ onComplete }: PhotoMontageIntroProps
           const beatIndex = Math.floor(phaseTime / BEAT_INTERVAL_SEC)
           const photoIndex = beatIndex % shuffledRoadtrip.current.length
 
+          // Initialize to first photo if not set yet (prevents black flash)
+          if (photoIndexRefs.current.q3 === -1) {
+            updatePhotoDisplay(q3Ref, 0, -1, shuffledRoadtrip.current)
+            photoIndexRefs.current.q3 = 0
+          }
+
           if (photoIndex !== photoIndexRefs.current.q3) {
             updatePhotoDisplay(q3Ref, photoIndex, photoIndexRefs.current.q3, shuffledRoadtrip.current)
             photoIndexRefs.current.q3 = photoIndex
@@ -315,6 +334,12 @@ export default function PhotoMontageIntro({ onComplete }: PhotoMontageIntroProps
           const phaseTime = t - SCHEDULE.montage3End
           const beatIndex = Math.floor(phaseTime / BEAT_INTERVAL_SEC)
           const photoIndex = beatIndex % shuffledEurope.current.length
+
+          // Initialize to first photo if not set yet (prevents black flash)
+          if (photoIndexRefs.current.q4 === -1) {
+            updatePhotoDisplay(q4Ref, 0, -1, shuffledEurope.current)
+            photoIndexRefs.current.q4 = 0
+          }
 
           if (photoIndex !== photoIndexRefs.current.q4) {
             updatePhotoDisplay(q4Ref, photoIndex, photoIndexRefs.current.q4, shuffledEurope.current)
@@ -435,13 +460,54 @@ export default function PhotoMontageIntro({ onComplete }: PhotoMontageIntroProps
       if (document.hidden) {
         audio.pause()
       } else if (isPlaying && !hasCompletedRef.current) {
-        audio.play().catch(() => {})
+        audio.play().catch(() => {
+          // On mobile, autoplay resume may fail - show tap to resume
+          setIsPaused(true)
+        })
       }
     }
 
     document.addEventListener('visibilitychange', handleVisibility)
     return () => document.removeEventListener('visibilitychange', handleVisibility)
   }, [isPlaying])
+
+  // Monitor audio pause state (for mobile interruptions like phone calls)
+  useEffect(() => {
+    const audio = audioRef.current
+    if (!audio) return
+
+    const handlePause = () => {
+      // Only show paused overlay if we didn't intentionally pause and intro isn't complete
+      if (isPlaying && !hasCompletedRef.current && !document.hidden) {
+        setIsPaused(true)
+      }
+    }
+
+    const handlePlay = () => {
+      setIsPaused(false)
+    }
+
+    audio.addEventListener('pause', handlePause)
+    audio.addEventListener('play', handlePlay)
+
+    return () => {
+      audio.removeEventListener('pause', handlePause)
+      audio.removeEventListener('play', handlePlay)
+    }
+  }, [isPlaying])
+
+  // Handle tap to resume
+  const handleResume = async () => {
+    const audio = audioRef.current
+    if (!audio) return
+
+    try {
+      await audio.play()
+      setIsPaused(false)
+    } catch (err) {
+      console.error('Failed to resume audio:', err)
+    }
+  }
 
   const handleSkip = () => {
     if (audioRef.current) {
@@ -498,8 +564,8 @@ export default function PhotoMontageIntro({ onComplete }: PhotoMontageIntroProps
         overflow: 'hidden',
       }}
     >
-      {/* Audio */}
-      <audio ref={audioRef} src={SONG_URL} preload="auto" />
+      {/* Audio - playsInline for iOS */}
+      <audio ref={audioRef} src={SONG_URL} preload="auto" playsInline />
 
       {/* Quadrant 1: Washington (top-left) */}
       <div ref={(el) => { quadrantRefs.current.q1 = el }} style={quadrantStyle('top-left')}>
@@ -532,6 +598,45 @@ export default function PhotoMontageIntro({ onComplete }: PhotoMontageIntroProps
           <img key={src} data-photo-index={index} src={src} alt="" style={imageStyle} />
         ))}
       </div>
+
+      {/* Tap to resume overlay (for mobile audio interruptions) */}
+      {isPaused && (
+        <div
+          onClick={handleResume}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            zIndex: 10,
+            cursor: 'pointer',
+          }}
+        >
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '12px',
+          }}>
+            <svg width="60" height="60" viewBox="0 0 24 24" fill="white">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+            <span style={{
+              color: 'white',
+              fontSize: '14px',
+              letterSpacing: '1px',
+              textTransform: 'uppercase',
+            }}>
+              Tap to resume
+            </span>
+          </div>
+        </div>
+      )}
 
       {/* Skip button */}
       <button
